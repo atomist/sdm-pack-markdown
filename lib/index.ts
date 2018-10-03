@@ -19,7 +19,7 @@ import {
     metadata,
 } from "@atomist/sdm";
 
-export const SeedSupport: ExtensionPack = {
+export const MarkdownSupport: ExtensionPack = {
     ...metadata(),
     configure: sdm => {
         return sdm;
