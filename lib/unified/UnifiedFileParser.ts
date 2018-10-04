@@ -1,6 +1,6 @@
 import { FileParser } from "@atomist/automation-client";
-import { TreeNode } from "@atomist/tree-path";
 import { ProjectFile } from "@atomist/sdm";
+import { TreeNode } from "@atomist/tree-path";
 
 import * as unified from "unified";
 

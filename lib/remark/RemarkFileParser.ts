@@ -1,5 +1,5 @@
-import { UnifiedFileParser, UnifiedNode } from "../unified/UnifiedFileParser";
 import { TreeNode } from "@atomist/tree-path";
+import { UnifiedFileParser, UnifiedNode } from "../unified/UnifiedFileParser";
 
 const markdown = require("remark-parse");
 
