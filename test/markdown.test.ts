@@ -55,7 +55,7 @@ describe("markdown manipulation", () => {
         const t = appendSnippet({
             path: "not.there.md",
             createIfAbsent: true,
-            source: "README.md"
+            source: "README.md",
         });
         const tr = await t(p, undefined) as TransformResult;
         assert.strictEqual(tr.edited, true);

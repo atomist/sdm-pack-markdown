@@ -73,7 +73,6 @@ export function appendSnippet(opts: MarkdownAddContentOptions): CodeTransform {
             await f.setContent(await f.getContent() + "\n\n" + await findContent(opts));
         } else {
             const content = await findContent(opts);
-            console.log(content);
             await project.addFile(opts.path, content);
         }
         return { target: project, edited: true, success: true };
