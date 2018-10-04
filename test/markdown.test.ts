@@ -21,6 +21,8 @@ import {
 import { appendSnippet } from "../lib/markdown";
 
 import * as assert from "assert";
+import * as fs from "fs";
+import { promisify } from "util";
 
 describe("markdown manipulation", () => {
 
@@ -50,12 +52,17 @@ describe("markdown manipulation", () => {
 
     it("should create markdown from file source if it does not exist if option is set", async () => {
         const p = InMemoryProject.of();
-        const t = appendSnippet({ path: "not.there.md", createIfAbsent: true, source: "README.md" });
+        const t = appendSnippet({
+            path: "not.there.md",
+            createIfAbsent: true,
+            source: "README.md"
+        });
         const tr = await t(p, undefined) as TransformResult;
         assert.strictEqual(tr.edited, true);
         const f = p.findFileSync("not.there.md");
+        const expectedContent = await (promisify(fs.readFile))("README.md", { encoding: "utf-8" });
         assert(!!f);
-        assert.strictEqual(f.getContentSync(), "thing");
+        assert.strictEqual(f.getContentSync(), expectedContent);
     });
 
 });
