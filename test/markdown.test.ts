@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { InMemoryProject, TransformResult } from "@atomist/sdm";
+import {
+    InMemoryProject,
+    TransformResult,
+} from "@atomist/sdm";
 import { appendSnippet } from "../lib/markdown";
 
 import * as assert from "assert";
