@@ -24,7 +24,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-        private readonly parser: any) {
+                          private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -55,8 +55,8 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 export type UnifiedTreeNode = TreeNode;
 
 function toUnifiedTreeNode<TN extends UnifiedTreeNode>(unifiedNode: UnifiedNode,
-    fullContent: string,
-    enrich: (utn: UnifiedTreeNode, from: UnifiedNode) => TN): TN {
+                                                       fullContent: string,
+                                                       enrich: (utn: UnifiedTreeNode, from: UnifiedNode) => TN): TN {
     const startOffset = unifiedNode.position.start.offset;
     let value = unifiedNode.value;
     if (!value) {
@@ -79,15 +79,17 @@ function attachParents(tree: TreeNode): void {
     tree.$children.forEach(attachParents);
 }
 
-
 // mutates the tree
-export function eatYourSiblings<T extends TreeNode>(tree: T, shouldBeNested: (shouldThisOne: T, beNestedUnder: T) => boolean): void {
+export function eatYourSiblings<T extends TreeNode>(
+    tree: T,
+    shouldBeNested: (shouldThisOne: T, beNestedUnder: T) => boolean): void {
 
     let i = 0;
     const ammendedChildren = [];
     while (i < tree.$children.length) {
         const hungryChild = tree.$children[i];
-        const edibleSiblings = _.takeWhile(tree.$children.slice(i + 1), sib => shouldBeNested(sib as T, hungryChild as T));
+        const edibleSiblings = _.takeWhile(tree.$children.slice(i + 1),
+            sib => shouldBeNested(sib as T, hungryChild as T));
         edibleSiblings.forEach(sib => hungryChild.$children.push(sib)); // might be none
         ammendedChildren.push(hungryChild);
         i = i + 1 + edibleSiblings.length;

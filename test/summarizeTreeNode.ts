@@ -46,13 +46,14 @@ export function summarizeNode(tn: TreeNode): NodeSummary {
 }
 
 export function assertPartialEquals(actual: NodeSummary,
-    expected: Partial<NodeSummary>, path: string[] = []): void {
+                                    expected: Partial<NodeSummary>, path: string[] = []): void {
     // assert(actual !== undefined, "Actual value was undefined at " + path.join("."))
     Object.entries(expected).forEach(([key, expectedValue]) => {
         const actualValue = actual[key];
         if (Array.isArray(expectedValue)) {
             assert(expectedValue.length <= actualValue.length,
-                `Actual array is too short at ${[...path, key].join(".")}. Expected at least ${expectedValue.length}, got ${actualValue.length}`);
+                `Actual array is too short at ${[...path, key].join(".")}. Expected at least ${
+                expectedValue.length}, got ${actualValue.length}`);
             // only check for the listed ones. extra is fine
             expectedValue.forEach((v, i) => assertPartialEquals(actualValue[i], v, [...path, key + "[" + i + "]"]));
         } else {

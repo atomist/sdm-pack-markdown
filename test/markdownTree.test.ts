@@ -17,12 +17,12 @@
 import { InMemoryProjectFile } from "@atomist/sdm";
 import { RemarkFileParser } from "../lib/remark/RemarkFileParser";
 
+import { TreeNode } from "@atomist/tree-path";
 import * as assert from "assert";
 import {
     assertPartialEquals,
     summarizeNode,
 } from "./summarizeTreeNode";
-import { TreeNode } from "@atomist/tree-path";
 
 const someMarkdown = `# Heading 1
 
@@ -36,7 +36,7 @@ This is text
 
 blah blah
 
-`
+`;
 describe("parser", () => {
 
     it("should create tree", async () => {
@@ -60,16 +60,16 @@ describe("parser", () => {
                     children: [{ name: "text", value: "Heading 1", offset: 2 },
                     {
                         name: "heading", depth: 2,
-                        children: [{ name: "text", value: "Heading 1.1" }, { name: "paragraph" }]
+                        children: [{ name: "text", value: "Heading 1.1" }, { name: "paragraph" }],
                     },
-                    ]
+                    ],
                 },
                 { name: "heading", depth: 1, children: [{ name: "text", value: "Heading 2 is empty" }] },
                 {
                     name: "heading", depth: 1, children: [{ name: "text", value: "Heading 3 has stuff" },
-                    { name: "paragraph", value: "blah blah" }]
+                    { name: "paragraph", value: "blah blah" }],
                 },
-            ]
+            ],
         });
     });
 
@@ -77,7 +77,7 @@ describe("parser", () => {
         const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
         const ast = await RemarkFileParser.toAst(f);
         assert(!!ast);
-        assert(allChildrenHaveTheRightParent(ast))
+        assert(allChildrenHaveTheRightParent(ast));
     });
 
     it("should include all children in the offset");
