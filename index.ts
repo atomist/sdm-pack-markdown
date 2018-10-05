@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-export { MarkdownSupport } from "./lib";
+export { MarkdownSupport } from "./lib/markdownSupport";
+export { RemarkFileParser } from "./lib/remark/RemarkFileParser";

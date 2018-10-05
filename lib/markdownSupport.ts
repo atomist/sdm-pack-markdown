@@ -20,8 +20,6 @@ import {
     metadata,
 } from "@atomist/sdm";
 
-export { RemarkFileParser } from "./remark/RemarkFileParser";
-
 export const MarkdownSupport: ExtensionPack = {
     ...metadata(),
     configure: sdm => {
