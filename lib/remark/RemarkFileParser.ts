@@ -18,6 +18,7 @@ import { TreeNode } from "@atomist/tree-path";
 import {
     UnifiedFileParser,
     UnifiedNode,
+    UnifiedTreeNode,
 } from "../unified/UnifiedFileParser";
 
 const markdown = require("remark-parse");
@@ -32,12 +33,14 @@ export class RemarkFileParser extends UnifiedFileParser<MarkdownTreeNode> {
         const mtn = tn as MarkdownTreeNode;
         const raw = from as any;
         mtn.depth = raw.depth;
+        if (tn.$children) {
+            tn.$children = tn.$children.map((v, i) => this.enrich(v, from.children[i]))
+        }
         return mtn;
     }
 }
 
-export interface MarkdownTreeNode extends TreeNode {
-
+export type MarkdownTreeNode = UnifiedTreeNode & {
     /**
      * Applies to headings
      */

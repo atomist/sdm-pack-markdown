@@ -34,7 +34,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
         const content = await f.getContent();
         const parsed = parser.parse(content);
         console.log(JSON.stringify(parsed));
-        const n = new UnifiedTreeNode(parsed);
+        const n = toUnifiedTreeNode(parsed);
         return this.enrich(n, parsed);
     }
 
@@ -45,20 +45,14 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
 }
 
-class UnifiedTreeNode implements TreeNode {
+export type UnifiedTreeNode = TreeNode
 
-    get $children(): TreeNode[] {
-        return this.unifiedNode.children.map(c => new UnifiedTreeNode(c, this));
-    }
-
-    public readonly $name: string = this.unifiedNode.type;
-
-    public readonly $offset: number = !!this.unifiedNode.start ? this.unifiedNode.start.offset : 0;
-
-    public $value: string = this.unifiedNode.value;
-
-    constructor(private readonly unifiedNode: UnifiedNode,
-        public readonly parent?: TreeNode) {
+function toUnifiedTreeNode(unifiedNode: UnifiedNode): UnifiedTreeNode {
+    return {
+        $name: unifiedNode.type,
+        $offset: !!unifiedNode.start ? unifiedNode.start.offset : 0,
+        $children: unifiedNode.children ? unifiedNode.children.map(toUnifiedTreeNode) : undefined,
+        $value: unifiedNode.value,
     }
 }
 

@@ -38,7 +38,7 @@ describe("parser", () => {
         assertPartialEquals(summary, {
             name: "root",
             children: [
-                { name: "heading", offset: 0 },
+                { name: "heading", offset: 0, depth: 1 },
                 { name: "heading" },
                 { name: "paragraph" }]
         });

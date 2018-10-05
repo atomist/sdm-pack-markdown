@@ -31,7 +31,6 @@ export function summarizeNode(tn: TreeNode) {
 
 export function assertPartialEquals(actual: NodeSummary, expected: Partial<NodeSummary>, path: string[] = []) {
     Object.entries(expected).forEach(([key, expectedValue]) => {
-        console.log("key is " + key);
         const actualValue = actual[key];
         if (Array.isArray(expectedValue)) {
             // only check for the listed ones. extra is fine
