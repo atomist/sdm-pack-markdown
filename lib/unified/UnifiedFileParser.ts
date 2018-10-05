@@ -18,13 +18,13 @@ import { FileParser } from "@atomist/automation-client";
 import { ProjectFile } from "@atomist/sdm";
 import { TreeNode } from "@atomist/tree-path";
 
-import * as unified from "unified";
 import * as _ from "lodash";
+import * as unified from "unified";
 export abstract class UnifiedFileParser<TN extends TreeNode> implements FileParser<TN> {
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-        private readonly parser: any) {
+                          private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -33,7 +33,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
         const content = await f.getContent();
         const parsed = parser.parse(content);
-        console.log(JSON.stringify(parsed));
+        // console.log(JSON.stringify(parsed));
         const n = toUnifiedTreeNode(parsed);
         return this.enrich(n, parsed);
     }
@@ -45,7 +45,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
 }
 
-export type UnifiedTreeNode = TreeNode
+export type UnifiedTreeNode = TreeNode;
 
 function toUnifiedTreeNode(unifiedNode: UnifiedNode): UnifiedTreeNode {
     return {
@@ -53,7 +53,7 @@ function toUnifiedTreeNode(unifiedNode: UnifiedNode): UnifiedTreeNode {
         $offset: _.get(unifiedNode, "position.start.offset", 0),
         $children: unifiedNode.children ? unifiedNode.children.map(toUnifiedTreeNode) : undefined,
         $value: unifiedNode.value,
-    }
+    };
 }
 
 /**

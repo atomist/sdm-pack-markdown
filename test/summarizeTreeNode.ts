@@ -20,14 +20,14 @@ import * as assert from "assert";
 export type NodeSummary = { name: string, summarizeError: string } |
 {
     name: string,
-    children?: Array<NodeSummary>,
+    children?: NodeSummary[],
     value?: string,
     offset: number,
     length?: number,
     depth?: number,
-}
+};
 
-export function summarizeNode(tn: TreeNode) {
+export function summarizeNode(tn: TreeNode): NodeSummary {
     try {
         return {
             children: tn.$children ? tn.$children.map(summarizeNode) : undefined,
@@ -36,16 +36,17 @@ export function summarizeNode(tn: TreeNode) {
             offset: tn.$offset,
             length: tn.$value ? tn.$value.length : undefined,
             depth: (tn as any).depth,
-        }
+        };
     } catch (err) {
         return {
             name: tn.$name,
             summarizeError: err.message,
-        }
+        };
     }
 }
 
-export function assertPartialEquals(actual: NodeSummary, expected: Partial<NodeSummary>, path: string[] = []) {
+export function assertPartialEquals(actual: NodeSummary,
+                                    expected: Partial<NodeSummary>, path: string[] = []): void {
     Object.entries(expected).forEach(([key, expectedValue]) => {
         const actualValue = actual[key];
         if (Array.isArray(expectedValue)) {
