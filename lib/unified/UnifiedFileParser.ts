@@ -20,11 +20,11 @@ import { TreeNode } from "@atomist/tree-path";
 
 import * as _ from "lodash";
 import * as unified from "unified";
-export abstract class UnifiedFileParser<TN extends TreeNode> implements FileParser<TN> {
+export abstract class UnifiedFileParser<TN extends UnifiedTreeNode> implements FileParser<TN> {
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-                          private readonly parser: any) {
+        private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -34,9 +34,11 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
         const content = await f.getContent();
         const parsed = parser.parse(content);
         // console.log(JSON.stringify(parsed));
-        const n = toUnifiedTreeNode(parsed, content, this.enrich);
+        const n = toUnifiedTreeNode(parsed, this.enrich);
         const enriched = this.enrich(n, parsed);
         eatYourSiblings(enriched, this.shouldBeNested);
+        adjustOffsets(enriched);
+        populateValues(enriched, content);
         attachParents(enriched);
         return enriched;
     }
@@ -52,26 +54,31 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
 }
 
-export type UnifiedTreeNode = TreeNode;
+export type UnifiedTreeNode = TreeNode & { $endOffset: number };
 
 function toUnifiedTreeNode<TN extends UnifiedTreeNode>(unifiedNode: UnifiedNode,
-                                                       fullContent: string,
-                                                       enrich: (utn: UnifiedTreeNode, from: UnifiedNode) => TN): TN {
+    enrich: (utn: UnifiedTreeNode, from: UnifiedNode) => TN): TN {
     const startOffset = unifiedNode.position.start.offset;
-    let value = unifiedNode.value;
-    if (!value) {
-        const endOffset = unifiedNode.position.end.offset;
-        value = fullContent.slice(startOffset, endOffset);
-    }
+    const endOffset = unifiedNode.position.end.offset;
 
     const unifiedTreeNode = {
         $name: unifiedNode.type,
         $offset: startOffset,
-        $children: unifiedNode.children ? unifiedNode.children.map(n => toUnifiedTreeNode(n, fullContent, enrich)) : [],
-        $value: value,
+        $children: unifiedNode.children ? unifiedNode.children.map(n => toUnifiedTreeNode(n, enrich)) : [],
+        $endOffset: endOffset,
     };
     const enriched = enrich(unifiedTreeNode, unifiedNode);
     return enriched;
+}
+
+function adjustOffsets(utn: UnifiedTreeNode): void {
+    utn.$children.forEach(adjustOffsets);
+    utn.$endOffset = Math.max(utn.$endOffset, ...utn.$children.map(c => (c as UnifiedTreeNode).$endOffset))
+}
+
+function populateValues(utn: UnifiedTreeNode, fullContent: string): void {
+    utn.$value = fullContent.slice(utn.$offset, utn.$endOffset);
+    utn.$children.forEach(c => populateValues(c as UnifiedTreeNode, fullContent));
 }
 
 function attachParents(tree: TreeNode): void {

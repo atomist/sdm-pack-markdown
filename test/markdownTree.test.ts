@@ -56,7 +56,7 @@ describe("parser", () => {
             name: "root",
             children: [
                 {
-                    name: "heading", offset: 0, depth: 1, value: "# Heading 1",
+                    name: "heading", offset: 0, depth: 1, value: "# Heading 1\n\n## Heading 1.1\n\nThis is text",
                     children: [{ name: "text", value: "Heading 1", offset: 2 },
                     {
                         name: "heading", depth: 2,
@@ -80,11 +80,27 @@ describe("parser", () => {
         assert(allChildrenHaveTheRightParent(ast));
     });
 
-    it("should include all children in the offset");
-
-    it("should have a value that matches the offset");
+    it("should include all children in the value", async () => {
+        const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
+        const ast = await RemarkFileParser.toAst(f);
+        assert(!!ast);
+        assert(allChildrenAreIncludedInTheirParent(ast));
+    });
 });
 
 function allChildrenHaveTheRightParent(tn: TreeNode): boolean {
     return tn.$children.every(c => c.$parent === tn) && tn.$children.every(allChildrenHaveTheRightParent);
 }
+
+function endOffset(tn: TreeNode): number {
+    return tn.$offset + tn.$value.length;
+}
+
+function maxDescendentOffset(tn: TreeNode): number {
+    return Math.max(endOffset(tn), ...tn.$children.map(maxDescendentOffset));
+}
+
+function allChildrenAreIncludedInTheirParent(tn: TreeNode): boolean {
+    return endOffset(tn) >= maxDescendentOffset(tn) && tn.$children.every(allChildrenAreIncludedInTheirParent);
+}
+
