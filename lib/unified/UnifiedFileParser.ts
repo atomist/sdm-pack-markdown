@@ -24,7 +24,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-                          private readonly parser: any) {
+        private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -63,6 +63,25 @@ function toUnifiedTreeNode(unifiedNode: UnifiedNode, fullContent: string): Unifi
     };
     unifiedTreeNode.$children.forEach(c => c.$parent = unifiedTreeNode);
     return unifiedTreeNode;
+}
+
+
+// mutates the tree
+export function eatYourSiblings<T extends TreeNode>(tree: T, shouldBeNested: (shouldThisOne: T, beNestedUnder: T) => boolean): void {
+
+    let i = 0;
+    const ammendedChildren = [];
+    while (i < tree.$children.length) {
+        const hungryChild = tree.$children[i];
+        const edibleSiblings = _.takeWhile(tree.$children.slice(i + 1), sib => shouldBeNested(sib as T, hungryChild as T));
+        edibleSiblings.forEach(sib => hungryChild.$children.push(sib)); // might be none
+        ammendedChildren.push(hungryChild);
+        i = i + 1 + edibleSiblings.length;
+    }
+
+    tree.$children = ammendedChildren;
+
+    tree.$children.forEach(c => eatYourSiblings(c as T, shouldBeNested));
 }
 
 /**

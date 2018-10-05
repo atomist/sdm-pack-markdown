@@ -1,11 +1,12 @@
 import * as assert from "assert";
 
 import * as jsverify from "jsverify";
+import { TreeNode } from "@atomist/tree-path";
+import { eatYourSiblings } from "../lib/unified/UnifiedFileParser";
 
 type MinimalTree = {
-    $children: MinimalTree[],
     depth: number,
-}
+} & TreeNode
 
 const arbitraryDepth = jsverify.elements([1, 2, 3]);
 
@@ -17,29 +18,24 @@ const { arbitraryChildren, arbitraryTree } = (jsverify as any).letrec(tie => {
 })
 
 describe("Re-nesting the tree", () => {
-    jsverify.property("deeper things are nested under less deep things", arbitraryTree, tree => childrenDontGetDeeper(tree))
+    jsverify.property("deeper things are nested under less deep things", arbitraryTree, tree => {
+        eatYourSiblings(tree, deeper);
+        return childrenDontGetDeeper(tree);
+    })
 });
+
 
 function childrenDontGetDeeper(tree: MinimalTree): boolean {
     return window(tree.$children).every(([a, b]) => {
-        const laterOneIsDeeper = deeper(b, a);
+        const laterOneIsDeeper = deeper(b as MinimalTree, a as MinimalTree);
         if (laterOneIsDeeper) {
-            console.log("Problem: " + b.depth + " is deeper than " + a.depth);
+            console.log("Problem: " + (b as MinimalTree).depth + " is deeper than " + (a as MinimalTree).depth);
         }
         return !laterOneIsDeeper;
     }) && tree.$children.every(childrenDontGetDeeper);
 }
 
 export function deeper(isThisNode: MinimalTree, deeperThanThis: MinimalTree): boolean {
-    if (isThisNode.depth === deeperThanThis.depth) {
-        // same level
-        return false;
-    }
-    if (isThisNode.depth === undefined) {
-        // undefined goes under any heading
-        return true;
-    }
-    // compare level of heading
     return isThisNode.depth > deeperThanThis.depth;
 }
 
