@@ -24,7 +24,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-        private readonly parser: any) {
+                          private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -51,12 +51,9 @@ function toUnifiedTreeNode(unifiedNode: UnifiedNode, fullContent: string): Unifi
     const startOffset = unifiedNode.position.start.offset;
     let value = unifiedNode.value;
     if (!value) {
-        console.log("finding value")
         const endOffset = unifiedNode.position.end.offset;
-        console.log("Looking from " + startOffset + " to " + endOffset)
         value = fullContent.slice(startOffset, endOffset);
     }
-    console.log("Value is: " + value);
 
     const unifiedTreeNode = {
         $name: unifiedNode.type,

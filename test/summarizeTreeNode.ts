@@ -46,7 +46,7 @@ export function summarizeNode(tn: TreeNode): NodeSummary {
 }
 
 export function assertPartialEquals(actual: NodeSummary,
-    expected: Partial<NodeSummary>, path: string[] = []): void {
+                                    expected: Partial<NodeSummary>, path: string[] = []): void {
     Object.entries(expected).forEach(([key, expectedValue]) => {
         const actualValue = actual[key];
         if (Array.isArray(expectedValue)) {
