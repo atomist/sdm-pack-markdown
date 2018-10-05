@@ -32,7 +32,7 @@ export function summarizeNode(tn: TreeNode): NodeSummary {
         return {
             children: tn.$children ? tn.$children.map(summarizeNode) : undefined,
             name: tn.$name,
-            value: tn.$children ? undefined : tn.$value,
+            value: tn.$value,
             offset: tn.$offset,
             length: tn.$value ? tn.$value.length : undefined,
             depth: (tn as any).depth,
@@ -46,7 +46,7 @@ export function summarizeNode(tn: TreeNode): NodeSummary {
 }
 
 export function assertPartialEquals(actual: NodeSummary,
-                                    expected: Partial<NodeSummary>, path: string[] = []): void {
+    expected: Partial<NodeSummary>, path: string[] = []): void {
     Object.entries(expected).forEach(([key, expectedValue]) => {
         const actualValue = actual[key];
         if (Array.isArray(expectedValue)) {

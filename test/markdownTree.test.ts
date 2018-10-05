@@ -37,12 +37,12 @@ describe("parser", () => {
         const ast = await RemarkFileParser.toAst(f);
         assert(!!ast);
         const summary = summarizeNode(ast);
-        // console.log(JSON.stringify(summary, undefined, 2));
+        console.log(JSON.stringify(summary, undefined, 2));
         assertPartialEquals(summary, {
             name: "root",
             children: [
                 {
-                    name: "heading", offset: 0, depth: 1,
+                    name: "heading", offset: 0, depth: 1, value: "# Heading 1",
                     children: [{ name: "text", value: "Heading 1", offset: 2 }],
                 },
                 { name: "heading", depth: 2 },

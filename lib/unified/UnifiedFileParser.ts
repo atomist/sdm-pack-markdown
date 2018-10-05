@@ -24,7 +24,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-                          private readonly parser: any) {
+        private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -34,7 +34,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
         const content = await f.getContent();
         const parsed = parser.parse(content);
         // console.log(JSON.stringify(parsed));
-        const n = toUnifiedTreeNode(parsed);
+        const n = toUnifiedTreeNode(parsed, content);
         return this.enrich(n, parsed);
     }
 
@@ -47,12 +47,22 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
 export type UnifiedTreeNode = TreeNode;
 
-function toUnifiedTreeNode(unifiedNode: UnifiedNode): UnifiedTreeNode {
+function toUnifiedTreeNode(unifiedNode: UnifiedNode, fullContent: string): UnifiedTreeNode {
+    const startOffset = unifiedNode.position.start.offset;
+    let value = unifiedNode.value;
+    if (!value) {
+        console.log("finding value")
+        const endOffset = unifiedNode.position.end.offset;
+        console.log("Looking from " + startOffset + " to " + endOffset)
+        value = fullContent.slice(startOffset, endOffset);
+    }
+    console.log("Value is: " + value);
+
     return {
         $name: unifiedNode.type,
-        $offset: _.get(unifiedNode, "position.start.offset", 0),
-        $children: unifiedNode.children ? unifiedNode.children.map(toUnifiedTreeNode) : undefined,
-        $value: unifiedNode.value,
+        $offset: startOffset,
+        $children: unifiedNode.children ? unifiedNode.children.map(n => toUnifiedTreeNode(n, fullContent)) : undefined,
+        $value: value,
     };
 }
 
@@ -63,7 +73,7 @@ export interface UnifiedNode {
 
     type: string;
 
-    position: { start: { offset: number } };
+    position: { start: { offset: number }, end: { offset: number } };
 
     children: UnifiedNode[];
 
