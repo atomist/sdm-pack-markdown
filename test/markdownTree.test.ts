@@ -23,6 +23,19 @@ import {
     summarizeNode,
 } from "./summarizeTreeNode";
 
+const someMarkdown = `# Heading 1
+
+## Heading 1.1
+
+This is text
+
+# Heading 2 is empty
+
+# Heading 3 has stuff
+
+blah blah
+
+`
 describe("parser", () => {
 
     it("should create tree", async () => {
@@ -33,7 +46,7 @@ describe("parser", () => {
     });
 
     it("should find heading", async () => {
-        const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
+        const f = new InMemoryProjectFile("README.md", someMarkdown);
         const ast = await RemarkFileParser.toAst(f);
         assert(!!ast);
         const summary = summarizeNode(ast);
@@ -45,8 +58,11 @@ describe("parser", () => {
                     name: "heading", offset: 0, depth: 1, value: "# Heading 1",
                     children: [{ name: "text", value: "Heading 1", offset: 2 }],
                 },
-                { name: "heading", depth: 2 },
-                { name: "paragraph" }],
+                { name: "heading", depth: 2, children: [{ name: "text", value: "Heading 1.1" }] },
+                { name: "paragraph" },
+                { name: "heading", depth: 1, children: [{ name: "text", value: "Heading 2 is empty" }] },
+                { name: "heading", depth: 1, children: [{ name: "text", value: "Heading 3 has stuff" }] },
+                { name: "paragraph", value: "blah blah" }],
         });
     });
 
