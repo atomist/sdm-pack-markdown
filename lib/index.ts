@@ -1,4 +1,4 @@
-import { RemarkFileParser } from './remark/RemarkFileParser';
+import { RemarkFileParser } from "./remark/RemarkFileParser";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
