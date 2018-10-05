@@ -49,4 +49,11 @@ describe("parser", () => {
                 { name: "paragraph" }],
         });
     });
+
+    it("should attach parent", async () => {
+        const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
+        const ast = await RemarkFileParser.toAst(f);
+        assert(!!ast);
+        assert(ast.$children[0].$parent.$name === ast.$name);
+    });
 });

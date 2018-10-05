@@ -58,12 +58,14 @@ function toUnifiedTreeNode(unifiedNode: UnifiedNode, fullContent: string): Unifi
     }
     console.log("Value is: " + value);
 
-    return {
+    const unifiedTreeNode = {
         $name: unifiedNode.type,
         $offset: startOffset,
-        $children: unifiedNode.children ? unifiedNode.children.map(n => toUnifiedTreeNode(n, fullContent)) : undefined,
+        $children: unifiedNode.children ? unifiedNode.children.map(n => toUnifiedTreeNode(n, fullContent)) : [],
         $value: value,
     };
+    unifiedTreeNode.$children.forEach(c => c.$parent = unifiedTreeNode);
+    return unifiedTreeNode;
 }
 
 /**
