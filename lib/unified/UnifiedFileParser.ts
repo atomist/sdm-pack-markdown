@@ -35,12 +35,18 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
         const parsed = parser.parse(content);
         // console.log(JSON.stringify(parsed));
         const n = toUnifiedTreeNode(parsed, content, this.enrich);
-        return this.enrich(n, parsed);
+        const enriched = this.enrich(n, parsed);
+        eatYourSiblings(enriched, this.shouldBeNested);
+        return enriched;
     }
 
     protected enrich(tn: TreeNode, from: UnifiedNode): TN {
         // Do nothing
         return tn as TN;
+    }
+
+    protected shouldBeNested(shouldThisOne: TN, beNestedUnder: TN): boolean {
+        return false;
     }
 
 }

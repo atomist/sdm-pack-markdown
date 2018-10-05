@@ -35,6 +35,10 @@ class RemarkFileParserClass extends UnifiedFileParser<MarkdownTreeNode> {
         const mtn = enrichWithDepth(tn, from);
         return mtn;
     }
+
+    protected shouldBeNested(shouldThisOne: MarkdownTreeNode, beNestedUnder: MarkdownTreeNode): boolean {
+        return deeper(shouldThisOne, beNestedUnder);
+    }
 }
 
 function enrichWithDepth(tn: TreeNode, from: UnifiedNode): MarkdownTreeNode {
