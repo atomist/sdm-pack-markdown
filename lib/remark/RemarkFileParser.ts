@@ -21,8 +21,8 @@ import {
     UnifiedTreeNode,
 } from "../unified/UnifiedFileParser";
 
-import * as markdown from "remark-parse";
 import { FileParser } from "@atomist/automation-client";
+import * as markdown from "remark-parse";
 
 class RemarkFileParserClass extends UnifiedFileParser<MarkdownTreeNode> {
 
