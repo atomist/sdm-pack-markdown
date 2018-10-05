@@ -37,6 +37,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
         const n = toUnifiedTreeNode(parsed, content, this.enrich);
         const enriched = this.enrich(n, parsed);
         eatYourSiblings(enriched, this.shouldBeNested);
+        attachParents(enriched);
         return enriched;
     }
 
@@ -70,8 +71,12 @@ function toUnifiedTreeNode<TN extends UnifiedTreeNode>(unifiedNode: UnifiedNode,
         $value: value,
     };
     const enriched = enrich(unifiedTreeNode, unifiedNode);
-    enriched.$children.forEach(c => c.$parent = unifiedTreeNode);
     return enriched;
+}
+
+function attachParents(tree: TreeNode): void {
+    tree.$children.forEach(c => c.$parent = tree);
+    tree.$children.forEach(attachParents);
 }
 
 

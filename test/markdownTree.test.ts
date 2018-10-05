@@ -22,6 +22,7 @@ import {
     assertPartialEquals,
     summarizeNode,
 } from "./summarizeTreeNode";
+import { TreeNode } from "@atomist/tree-path";
 
 const someMarkdown = `# Heading 1
 
@@ -76,6 +77,14 @@ describe("parser", () => {
         const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
         const ast = await RemarkFileParser.toAst(f);
         assert(!!ast);
-        assert(ast.$children[0].$parent.$name === ast.$name);
+        assert(allChildrenHaveTheRightParent(ast))
     });
+
+    it("should include all children in the offset");
+
+    it("should have a value that matches the offset");
 });
+
+function allChildrenHaveTheRightParent(tn: TreeNode): boolean {
+    return tn.$children.every(c => c.$parent === tn) && tn.$children.every(allChildrenHaveTheRightParent);
+}
