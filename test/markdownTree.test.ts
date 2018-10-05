@@ -18,6 +18,7 @@ import { InMemoryProjectFile } from "@atomist/sdm";
 import { RemarkFileParser } from "../lib/remark/RemarkFileParser";
 
 import * as assert from "assert";
+import { summarizeNode, assertPartialEquals } from "./summarizeTreeNode";
 
 describe("parser", () => {
 
@@ -32,8 +33,14 @@ describe("parser", () => {
         const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
         const ast = await new RemarkFileParser().toAst(f);
         assert(!!ast);
-        assert.strictEqual(ast.$children[0].$name, "heading");
-        assert.strictEqual(ast.$children[1].$name, "heading");
-        assert.strictEqual(ast.$children[2].$name, "paragraph");
+        const summary = summarizeNode(ast);
+        console.log(JSON.stringify(summary, null, 2))
+        assertPartialEquals(summary, {
+            name: "root",
+            children: [
+                { name: "heading", offset: 0 },
+                { name: "heading" },
+                { name: "paragraph" }]
+        });
     });
 });

@@ -24,7 +24,7 @@ export abstract class UnifiedFileParser<TN extends TreeNode> implements FilePars
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-                          private readonly parser: any) {
+        private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -53,12 +53,12 @@ class UnifiedTreeNode implements TreeNode {
 
     public readonly $name: string = this.unifiedNode.type;
 
-    public readonly $offset: number = !!this.unifiedNode.start ? this.unifiedNode.start.offset : -1;
+    public readonly $offset: number = !!this.unifiedNode.start ? this.unifiedNode.start.offset : 0;
 
     public $value: string = this.unifiedNode.value;
 
     constructor(private readonly unifiedNode: UnifiedNode,
-                public readonly parent?: TreeNode) {
+        public readonly parent?: TreeNode) {
     }
 }
 
