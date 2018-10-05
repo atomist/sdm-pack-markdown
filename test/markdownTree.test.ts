@@ -18,7 +18,10 @@ import { InMemoryProjectFile } from "@atomist/sdm";
 import { RemarkFileParser } from "../lib/remark/RemarkFileParser";
 
 import * as assert from "assert";
-import { summarizeNode, assertPartialEquals } from "./summarizeTreeNode";
+import {
+    assertPartialEquals,
+    summarizeNode,
+} from "./summarizeTreeNode";
 
 describe("parser", () => {
 
