@@ -19,7 +19,7 @@ import { ProjectFile } from "@atomist/sdm";
 import { TreeNode } from "@atomist/tree-path";
 
 import * as unified from "unified";
-
+import * as _ from "lodash";
 export abstract class UnifiedFileParser<TN extends TreeNode> implements FileParser<TN> {
 
     // TODO type the parser
@@ -50,7 +50,7 @@ export type UnifiedTreeNode = TreeNode
 function toUnifiedTreeNode(unifiedNode: UnifiedNode): UnifiedTreeNode {
     return {
         $name: unifiedNode.type,
-        $offset: !!unifiedNode.start ? unifiedNode.start.offset : 0,
+        $offset: _.get(unifiedNode, "position.start.offset", 0),
         $children: unifiedNode.children ? unifiedNode.children.map(toUnifiedTreeNode) : undefined,
         $value: unifiedNode.value,
     }
@@ -63,7 +63,7 @@ export interface UnifiedNode {
 
     type: string;
 
-    start: { offset: number };
+    position: { start: { offset: number } };
 
     children: UnifiedNode[];
 
