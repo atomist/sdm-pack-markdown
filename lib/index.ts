@@ -1,3 +1,4 @@
+import { RemarkFileParser } from './remark/RemarkFileParser';
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -18,6 +19,8 @@ import {
     ExtensionPack,
     metadata,
 } from "@atomist/sdm";
+
+export { RemarkFileParser } from "./remark/RemarkFileParser";
 
 export const MarkdownSupport: ExtensionPack = {
     ...metadata(),
