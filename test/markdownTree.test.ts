@@ -56,13 +56,19 @@ describe("parser", () => {
             children: [
                 {
                     name: "heading", offset: 0, depth: 1, value: "# Heading 1",
-                    children: [{ name: "text", value: "Heading 1", offset: 2 }],
+                    children: [{ name: "text", value: "Heading 1", offset: 2 },
+                    {
+                        name: "heading", depth: 2,
+                        children: [{ name: "text", value: "Heading 1.1" }, { name: "paragraph" }]
+                    },
+                    ]
                 },
-                { name: "heading", depth: 2, children: [{ name: "text", value: "Heading 1.1" }] },
-                { name: "paragraph" },
                 { name: "heading", depth: 1, children: [{ name: "text", value: "Heading 2 is empty" }] },
-                { name: "heading", depth: 1, children: [{ name: "text", value: "Heading 3 has stuff" }] },
-                { name: "paragraph", value: "blah blah" }],
+                {
+                    name: "heading", depth: 1, children: [{ name: "text", value: "Heading 3 has stuff" },
+                    { name: "paragraph", value: "blah blah" }]
+                },
+            ]
         });
     });
 
