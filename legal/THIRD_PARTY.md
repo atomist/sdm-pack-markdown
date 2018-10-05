@@ -1,6 +1,6 @@
-# sdm-pack-markdown
+# @atomist/sdm-pack-markdown
 
-This page details all runtime OSS dependencies of `sdm-pack-markdown`.
+This page details all runtime OSS dependencies of `@atomist/sdm-pack-markdown`.
 
 ## Licenses
 
