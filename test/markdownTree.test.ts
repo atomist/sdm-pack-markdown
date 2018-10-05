@@ -27,14 +27,14 @@ describe("parser", () => {
 
     it("should create tree", async () => {
         const f = new InMemoryProjectFile("README.md", "# Heading 1");
-        const ast = await new RemarkFileParser().toAst(f);
+        const ast = await RemarkFileParser.toAst(f);
         assert(!!ast);
         assert.strictEqual(ast.$name, "root");
     });
 
     it("should find heading", async () => {
         const f = new InMemoryProjectFile("README.md", "# Heading 1\n## Heading 2\nThis is text");
-        const ast = await new RemarkFileParser().toAst(f);
+        const ast = await RemarkFileParser.toAst(f);
         assert(!!ast);
         const summary = summarizeNode(ast);
         // console.log(JSON.stringify(summary, undefined, 2));

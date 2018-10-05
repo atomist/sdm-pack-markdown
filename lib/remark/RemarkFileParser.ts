@@ -22,8 +22,9 @@ import {
 } from "../unified/UnifiedFileParser";
 
 import * as markdown from "remark-parse";
+import { FileParser } from "@atomist/automation-client";
 
-export class RemarkFileParser extends UnifiedFileParser<MarkdownTreeNode> {
+class RemarkFileParserClass extends UnifiedFileParser<MarkdownTreeNode> {
 
     constructor() {
         super("markdown", markdown);
@@ -39,6 +40,8 @@ export class RemarkFileParser extends UnifiedFileParser<MarkdownTreeNode> {
         return mtn;
     }
 }
+
+export const RemarkFileParser: FileParser<MarkdownTreeNode> = new RemarkFileParserClass();
 
 export type MarkdownTreeNode = UnifiedTreeNode & {
     /**
