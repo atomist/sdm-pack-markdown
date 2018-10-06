@@ -103,4 +103,3 @@ function maxDescendentOffset(tn: TreeNode): number {
 function allChildrenAreIncludedInTheirParent(tn: TreeNode): boolean {
     return endOffset(tn) >= maxDescendentOffset(tn) && tn.$children.every(allChildrenAreIncludedInTheirParent);
 }
-

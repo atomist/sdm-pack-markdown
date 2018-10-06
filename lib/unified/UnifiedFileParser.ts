@@ -24,7 +24,7 @@ export abstract class UnifiedFileParser<TN extends UnifiedTreeNode> implements F
 
     // TODO type the parser
     protected constructor(public readonly rootName: string,
-        private readonly parser: any) {
+                          private readonly parser: any) {
     }
 
     public async toAst(f: ProjectFile): Promise<TN> {
@@ -57,7 +57,7 @@ export abstract class UnifiedFileParser<TN extends UnifiedTreeNode> implements F
 export type UnifiedTreeNode = TreeNode & { $endOffset: number };
 
 function toUnifiedTreeNode<TN extends UnifiedTreeNode>(unifiedNode: UnifiedNode,
-    enrich: (utn: UnifiedTreeNode, from: UnifiedNode) => TN): TN {
+                                                       enrich: (utn: UnifiedTreeNode, from: UnifiedNode) => TN): TN {
     const startOffset = unifiedNode.position.start.offset;
     const endOffset = unifiedNode.position.end.offset;
 
@@ -73,7 +73,7 @@ function toUnifiedTreeNode<TN extends UnifiedTreeNode>(unifiedNode: UnifiedNode,
 
 function adjustOffsets(utn: UnifiedTreeNode): void {
     utn.$children.forEach(adjustOffsets);
-    utn.$endOffset = Math.max(utn.$endOffset, ...utn.$children.map(c => (c as UnifiedTreeNode).$endOffset))
+    utn.$endOffset = Math.max(utn.$endOffset, ...utn.$children.map(c => (c as UnifiedTreeNode).$endOffset));
 }
 
 function populateValues(utn: UnifiedTreeNode, fullContent: string): void {
