@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { FileParser, ProjectFile } from "@atomist/automation-client";
+import {
+    FileParser,
+    ProjectFile,
+} from "@atomist/automation-client";
 import { TreeNode } from "@atomist/tree-path";
 
 import * as _ from "lodash";
