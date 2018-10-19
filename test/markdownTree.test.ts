@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { InMemoryProjectFile } from "@atomist/sdm";
 import { RemarkFileParser } from "../lib/remark/RemarkFileParser";
 
+import { InMemoryProjectFile } from "@atomist/automation-client";
 import { TreeNode } from "@atomist/tree-path";
 import * as assert from "assert";
 import {

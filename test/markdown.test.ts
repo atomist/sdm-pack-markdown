@@ -15,11 +15,11 @@
  */
 
 import {
-    InMemoryProject,
     TransformResult,
 } from "@atomist/sdm";
 import { appendSnippet } from "../lib/markdown";
 
+import { InMemoryProject } from "@atomist/automation-client";
 import * as assert from "assert";
 import * as fs from "fs";
 import { promisify } from "util";
