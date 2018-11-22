@@ -16,7 +16,10 @@
 
 import { Project } from "@atomist/automation-client";
 import { findMatches } from "@atomist/automation-client/lib/tree/ast/astUtils";
-import { CodeTransform, TransformResult } from "@atomist/sdm";
+import {
+    CodeTransform,
+    TransformResult,
+} from "@atomist/sdm";
 import { RemarkFileParser } from "./../remark/RemarkFileParser";
 
 export function updateTitle(path: string, newTitle: string): CodeTransform {
