@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { RemarkFileParser } from './../remark/RemarkFileParser';
-import { CodeTransform } from '@atomist/sdm';
-import { Project } from '@atomist/automation-client';
-import { findMatches } from '@atomist/automation-client/lib/tree/ast/astUtils';
+import { Project } from "@atomist/automation-client";
+import { findMatches } from "@atomist/automation-client/lib/tree/ast/astUtils";
+import { CodeTransform, TransformResult } from "@atomist/sdm";
+import { RemarkFileParser } from "./../remark/RemarkFileParser";
 
 export function updateTitle(path: string, newTitle: string): CodeTransform {
     return async (p: Project) => {
@@ -26,22 +26,21 @@ export function updateTitle(path: string, newTitle: string): CodeTransform {
             return failedTransformResult(p, `File ${path} not found`);
         }
 
-        const titleMatch = await findMatches(p, RemarkFileParser, path, "/root/heading/text")
+        const titleMatch = await findMatches(p, RemarkFileParser, path, "/root/heading/text");
         if (titleMatch.length < 1) {
             return failedTransformResult(p, `No title text found in ${path}`);
         }
         titleMatch[0].$value = newTitle;
         (p as any).flush();
-        return { target: p, success: true, edited: true }
-    }
+        return { target: p, success: true, edited: true };
+    };
 }
 
-
-function failedTransformResult(p: Project, message: string) {
+function failedTransformResult(p: Project, message: string): TransformResult {
     return {
         target: p,
         success: false,
         edited: false,
-        error: new Error(message)
-    }
+        error: new Error(message),
+    };
 }
