@@ -16,4 +16,4 @@
 
 export { MarkdownSupport } from "./lib/markdownSupport";
 export { RemarkFileParser } from "./lib/remark/RemarkFileParser";
-export { updateTitle } from "./lib/transform/updateTitle";
+export { updateTitle, updateTitleTransform, updatePageTitle } from "./lib/transform/updateTitle";

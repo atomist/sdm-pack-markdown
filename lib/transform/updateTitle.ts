@@ -22,28 +22,51 @@ import {
 } from "@atomist/sdm";
 import { RemarkFileParser } from "./../remark/RemarkFileParser";
 
-export function updateTitle(path: string, newTitle: string): CodeTransform {
+/**
+ * Get a code transform that updates the title of a markdown file to a fixed string
+ */
+export function updateTitleTransform(path: string, newTitle: string): CodeTransform {
     return async (p: Project) => {
-        const fileOfInterest = await p.getFile(path);
-        if (!fileOfInterest) {
-            return failedTransformResult(p, `File ${path} not found`);
+        try {
+            await updatePageTitle(p, path, newTitle);
+        } catch (err) {
+            return failedTransformResult(p, err);
         }
-
-        const titleMatch = await findMatches(p, RemarkFileParser, path, "/root/heading/text");
-        if (titleMatch.length < 1) {
-            return failedTransformResult(p, `No title text found in ${path}`);
-        }
-        titleMatch[0].$value = newTitle;
-        (p as any).flush();
         return { target: p, success: true, edited: true };
     };
 }
 
-function failedTransformResult(p: Project, message: string): TransformResult {
+/**
+ * Update the title of a markdown file within a project.
+ * If the file does not exist
+ * or cannot be parsed as markdown
+ * or does not currently have a title, returns a rejected promise.
+ */
+export async function updatePageTitle(project: Project, path: string, newTitle: string): Promise<void> {
+    const fileOfInterest = await project.getFile(path);
+    if (!fileOfInterest) {
+        throw new Error(`File ${path} not found`);
+    }
+
+    const titleMatch = await findMatches(project, RemarkFileParser, path, "/root/heading/text");
+    if (titleMatch.length < 1) {
+        throw new Error(`No title text found in ${path}`);
+    }
+    titleMatch[0].$value = newTitle;
+    (project as any).flush();
+}
+
+/**
+ * Deprecated: use updateTitleTransform for the transform,
+ * or updatePageTitle within a transform of your own.
+ */
+export const updateTitle = updateTitleTransform;
+
+function failedTransformResult(p: Project, error: Error): TransformResult {
     return {
         target: p,
         success: false,
         edited: false,
-        error: new Error(message),
+        error,
     };
 }
