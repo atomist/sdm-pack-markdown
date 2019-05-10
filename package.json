@@ -23,6 +23,7 @@
   "types": "./index.d.ts",
   "dependencies": {
     "@atomist/tree-path": "^1.0.3",
+    "@types/unist": "^2.0.3",
     "lodash": "^4.17.11",
     "remark-parse": "^5.0.0",
     "unified": "^7.1.0"

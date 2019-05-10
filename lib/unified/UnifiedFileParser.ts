@@ -36,8 +36,8 @@ export abstract class UnifiedFileParser<TN extends UnifiedTreeNode> implements F
         const content = await f.getContent();
         const parsed = parser.parse(content);
         // console.log(JSON.stringify(parsed));
-        const n = toUnifiedTreeNode(parsed, this.enrich);
-        const enriched = this.enrich(n, parsed);
+        const n = toUnifiedTreeNode(parsed as UnifiedNode, this.enrich);
+        const enriched = this.enrich(n, parsed as UnifiedNode);
         eatYourSiblings(enriched, this.shouldBeNested);
         adjustOffsets(enriched);
         populateValues(enriched, content);
@@ -112,11 +112,13 @@ export function eatYourSiblings<T extends TreeNode>(
 /**
  * Node returned by Unified
  */
-export interface UnifiedNode {
+// tslint:disable-next-line:no-implicit-dependencies
+import * as Unist from "unist";
+export interface UnifiedNode extends Unist.Parent {
 
     type: string;
 
-    position: { start: { offset: number }, end: { offset: number } };
+    //  position: { start: { offset: number, line: number, column: number }, end: { offset: number } };
 
     children: UnifiedNode[];
 
