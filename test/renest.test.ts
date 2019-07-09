@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import * as assert from "assert";
-
 import { TreeNode } from "@atomist/tree-path";
 import * as jsverify from "jsverify";
+import * as assert from "power-assert";
 import { eatYourSiblings } from "../lib/unified/UnifiedFileParser";
 
 type MinimalTree = {

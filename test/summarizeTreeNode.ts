@@ -15,7 +15,8 @@
  */
 
 import { TreeNode } from "@atomist/tree-path";
-import * as assert from "assert";
+import * as assert from "power-assert";
+import { DeepPartial } from "ts-essentials";
 
 export type NodeSummary = { name: string, summarizeError: string } |
 {
@@ -46,7 +47,7 @@ export function summarizeNode(tn: TreeNode): NodeSummary {
 }
 
 export function assertPartialEquals(actual: NodeSummary,
-                                    expected: Partial<NodeSummary>, path: string[] = []): void {
+                                    expected: DeepPartial<NodeSummary>, path: string[] = []): void {
     // assert(actual !== undefined, "Actual value was undefined at " + path.join("."))
     Object.entries(expected).forEach(([key, expectedValue]) => {
         const actualValue = actual[key];

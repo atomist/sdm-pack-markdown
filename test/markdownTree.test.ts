@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { RemarkFileParser } from "../lib/remark/RemarkFileParser";
-
 import { InMemoryProjectFile } from "@atomist/automation-client";
 import { TreeNode } from "@atomist/tree-path";
-import * as assert from "assert";
+import * as assert from "power-assert";
+import { RemarkFileParser } from "../lib/remark/RemarkFileParser";
 import {
     assertPartialEquals,
     summarizeNode,
@@ -37,6 +36,7 @@ This is text
 blah blah
 
 `;
+
 describe("parser", () => {
 
     it("should create tree", async () => {

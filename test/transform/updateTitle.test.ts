@@ -16,7 +16,7 @@
 
 import { InMemoryProject } from "@atomist/automation-client";
 import { TransformResult } from "@atomist/sdm";
-import * as assert from "assert";
+import * as assert from "power-assert";
 import { updateTitle } from "../../lib/transform/updateTitle";
 
 describe("Update Title transform", () => {
@@ -34,7 +34,7 @@ and some stuff
 and its content`,
             });
         const result = (await updateTitle("README.md", "New Title")(input, undefined)) as TransformResult;
-        assert(result.success, result.error);
+        assert(result.success, result.error as any);
         assert(result.edited, "Not edited");
 
         const newReadmeContent = await input.getFile("README.md").then(f => f.getContent());

@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-import {
-    TransformResult,
-} from "@atomist/sdm";
-import { appendSnippet } from "../lib/markdown";
-
 import { InMemoryProject } from "@atomist/automation-client";
-import * as assert from "assert";
+import { TransformResult } from "@atomist/sdm";
 import * as fs from "fs";
+import * as assert from "power-assert";
 import { promisify } from "util";
+import { appendSnippet } from "../lib/markdown";
 
 describe("markdown manipulation", () => {
 
