@@ -6,6 +6,7 @@
 .npmrc
 node_modules/
 *.d.ts
+*.d.ts.map
 *.js
 *.js.map
 *.log
@@ -15,4 +16,6 @@ node_modules/
 /coverage/
 /doc/
 /log/
+/lib/typings/
 git-info.json
+/index.ts
